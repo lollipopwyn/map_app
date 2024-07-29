@@ -3,27 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="map.css" />
-    <title>Map || Library</title>
+    <title>Map App</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      type="text/javascript"
+      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=.txt"
+    ></script>
+    <!-- m3tjx61ua6 -->
   </head>
   <body>
     <div class="wrapper">
       <div class="search">
-        <div class="input">
-          <button class="btn1">mic</button>
-          <button class="btn2">검색</button>
-        </div>
+        <input type="text" placeholder="지역 또는 도서관명 검색..." />
+        <button><i class="ri-search-line"></i></button>
       </div>
-      <div class="map"><img src="/mapImage.png" alt="지도" /></div>
-      <div class="detail-box">
-        아웃라인
-        <div class="detail-title">제목</div>
-        <div class="detail-info">도서 수량</div>
-        <div class="detial-list">운영 시간</div>
+      <div id="map">
+        <!-- <img src="/mapImage.png" alt="" /> -->
+      </div>
+
+      <div class="detail_box">
+        <div class="guide">
+          <i class="ri-arrow-drop-up-line"></i>
+        </div>
+
+        <div class="detail_wrapper"></div>
       </div>
     </div>
-
-    <!-- ======js====== -->
     <script src="data.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
