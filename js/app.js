@@ -26,9 +26,42 @@ const currentData = data.records.filter(
     item.위도 !== ''
 );
 
-// console.log(currentData);
+// 검색 버튼 기능
+const searchBtn = document.querySelector('.search button'); // 검색버튼
+const searchInput = document.querySelector('.search input'); //검색 입력창
+const mapElmt = document.querySelector('#map'); //네이버 맵 영역
+const loading = document.querySelector('.loading'); //로딩 이미지
 
-// 네이버 맵 적용
+// 검색 버튼 클릭 시 실행 함수
+searchBtn.addEventListener('click', function () {
+  const searchValue = searchInput.value; //입력값 저장
+
+  if (searchInput.value === '') {
+    alert('검색어를 입력해 주세요.');
+    searchInput.focus(); //커서 입력창에 포커스
+    return;
+  } // 검색어 없이 클릭할 경우 알림
+
+  const searchResult = currentData.filter(
+    (item) =>
+      item.도서관명.includes(searchValue) || item.시군구명.includes(searchValue)
+  );
+
+  if (searchResult.length === 0) {
+    alert('검색 결과가 없습니다.');
+    searchInput.value = '';
+    searchInput.focus();
+    return;
+  } else {
+    mapElmt.innerHTML = ''; //기존 맵 삭제
+    startLenderMap(searchResult[0].위도, searchResult[0].경도);
+  }
+
+  startLenderMap(searchResult[0].위도, searchResult[0].경도);
+  searchInput.value = '';
+});
+
+// 네이버 맵 적용: 현재 위치 검색
 navigator.geolocation.getCurrentPosition((position) => {
   // console.log(position)
   const lat = position.coords.latitude;
@@ -54,7 +87,7 @@ function startLenderMap(lat, lng) {
     let bounds = map.getBounds();
 
     if (bounds.hasLatLng(latlng)) {
-      // 현재 위치를 기준으로 화면 사에에 있는지 확인. 화면 내부의 마커만 생성
+      // 현재 위치를 기준으로 화면 사이에 있는지 확인. 화면 내부의 마커만 생성
       var marker = new naver.maps.Marker({
         position: latlng,
         map: map,
@@ -78,6 +111,9 @@ function startLenderMap(lat, lng) {
           <h4 style="padding:0.25rem 0.5rem; font-size:12px; font-weight:500; color:#555">${item.도서관명}</h4>
         `,
       });
+      setTimeout(() => {
+        loading.style.display = 'none';
+      }, 800);
 
       naver.maps.Event.addListener(marker, 'click', function () {
         if (infoWindow.getMap()) {
@@ -107,8 +143,6 @@ function startLenderMap(lat, lng) {
   });
 
   function getInfoOnMarker(markerInfoData) {
-    // console.log(markerInfoData);
-
     const infoWrapper = document.querySelector('.detail_wrapper');
     detailBox.style.bottom = 0;
     detailGuide.classList.add('active');
@@ -181,6 +215,7 @@ function startLenderMap(lat, lng) {
           </div>
         </div>
     `;
+    // insertAdjacentHTML 메소드는 DOM 요소에 HTML을 삽입할 때 사용
     infoWrapper.insertAdjacentHTML('beforeend', infoElmt);
   }
 }
